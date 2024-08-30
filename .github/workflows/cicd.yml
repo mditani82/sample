@@ -1,0 +1,17 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+        - uses: actions/checkout@v2  
+        - run: docker image prune --all --force
+        - run: docker rm -f walid_be
+        - run: docker build . -t walid_be_img
+        - name: "Running Docker Container"
+          run: sudo docker run --restart always -it -d -p 4545:3333 --hostname walidhost_be --name walid_be  walid_be_img
